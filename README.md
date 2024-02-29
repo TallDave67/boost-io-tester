@@ -13,3 +13,5 @@ BOOST_ROOT
 BOOST_VERSION
 
 Get your appid at https://openweathermap.org/appid and add it to config.json as the value for "weather_server_appid".
+
+Get your api_key at https://api.nasa.gov/ and add it to config.json as the value for "space_server_appid".
