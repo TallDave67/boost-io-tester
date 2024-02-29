@@ -13,6 +13,7 @@ bool CBoostIoTesterConfig::read_config()
 
         // Access data in the property tree
         weather_server_appid = tree.get<std::string>("weather_server_appid");
+        space_server_appid = tree.get<std::string>("space_server_appid");
         ret = true;
     }
     catch (std::exception const& e) {

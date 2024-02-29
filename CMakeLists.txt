@@ -16,7 +16,11 @@ set(BOOST_ROOT $ENV{BOOST_ROOT})
 set(BOOST_VERSION  $ENV{BOOST_VERSION})
 set(boost_system_DIR "${BOOST_ROOT}/stage/lib/cmake/boost_system-${BOOST_VERSION}")
 find_package(boost_system ${BOOST_VERSION} REQUIRED CONFIG)
+set(boost_fiber_DIR "${BOOST_ROOT}/stage/lib/cmake/boost_fiber-${BOOST_VERSION}")
+find_package(boost_fiber ${BOOST_VERSION} REQUIRED CONFIG)
 include_directories(${BOOST_ROOT})
+set(boost_lib_DIR "${BOOST_ROOT}/stage/lib")
+link_directories(${boost_lib_DIR})
 
 # Include sub-projects.
 add_subdirectory ("boost-io-tester")

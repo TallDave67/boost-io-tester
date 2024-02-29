@@ -9,4 +9,10 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET boost-io-tester PROPERTY CXX_STANDARD 20)
 endif()
 
+# Find OpenSSL
+find_package(OpenSSL REQUIRED)
+set(OPENSSL_ROOT $ENV{OPENSSL_ROOT})
+include_directories(${OPENSSL_ROOT})
+target_link_libraries(boost-io-tester PRIVATE OpenSSL::SSL)
+
 # TODO: Add tests and install targets if needed.

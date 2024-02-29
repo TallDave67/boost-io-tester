@@ -9,4 +9,5 @@ public:
 
 public:
     std::string weather_server_appid;
+    std::string space_server_appid;
 };
