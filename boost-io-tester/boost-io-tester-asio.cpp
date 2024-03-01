@@ -1,16 +1,12 @@
 #include "boost-io-tester-asio.h"
 #include "boost-io-tester-config.h"
 
-//using namespace std::chrono_literals;
-
 void CBoostIoTesterAsio::get_weather(CBoostIoTesterConfig* pConfig, const std::string& lat, const std::string& lon)
 {
     if (pConfig)
     {
         // create request
         std::string request = "GET /data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + pConfig->weather_server_appid + "&units=metric HTTP/1.1\r\n";
-        request += "Host: api.openweathermap.org\r\n";
-        request += "Connection: close\r\n\r\n";
 
         // send request and get response
         get_text_response_for_sync_request(request);
@@ -53,11 +49,18 @@ void CBoostIoTesterAsio::get_text_response_for_sync_request(std::string& request
     try {
         boost::asio::io_service io_service;
         boost::asio::ip::tcp::resolver resolver(io_service);
-        boost::asio::ip::tcp::resolver::query query("api.openweathermap.org", "http");
+        std::string host = "api.openweathermap.org";
+        boost::asio::ip::tcp::resolver::query query(host, "http");
 
         boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
         boost::asio::ip::tcp::socket socket(io_service);
         boost::asio::connect(socket, endpoint_iterator);
+
+        // Add the host to the request
+        request += "Host: ";
+        request += host;
+        request += "\r\n";
+        request += "Connection: close\r\n\r\n";
 
         // Send HTTP GET request
         boost::asio::write(socket, boost::asio::buffer(request));
