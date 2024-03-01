@@ -6,9 +6,6 @@
 #include "boost-io-tester-asio.h"
 #include "test_ids.h"
 
-#include <boost/asio.hpp>
-#include <boost/fiber/all.hpp>
-
 int main(int argc, char* argv[])
 {
     if (argc < 2) {
@@ -22,42 +19,33 @@ int main(int argc, char* argv[])
         std::cerr << "Usage to get the weather: " << argv[0] << " <test_id=100> <lat> <lon>" << std::endl;
         return 1;
     }
+    else if (test_id == TEST_GET_SPACE_IMAGES && argc < 3) {
+        std::cerr << "Usage to get the weather: " << argv[0] << " <test_id=99> <image1> ..." << std::endl;
+        return 1;
+    }
+
+    // Read the config
+    CBoostIoTesterConfig config;
+    config.read_config();
+
+    // Create our asio communicator
+    CBoostIoTesterAsio asio;
 
     // Launch the corresponding test program based on the test_id
     switch (test_id) {
     case TEST_GET_WEATHER:
         {
-            CBoostIoTesterConfig config;
-            config.read_config();
-            CBoostIoTesterAsio asio;
             asio.get_weather(&config, argv[2], argv[3]);
         }
         break;
-    case TEST_GET_SPACE_IMAGE:
+    case TEST_GET_SPACE_IMAGES:
     {
-        CBoostIoTesterConfig config;
-        config.read_config();
-        //
-        std::string host = "api.nasa.gov";
-        std::string path1 = "/EPIC/archive/natural/2024/02/28/png/epic_1b_20240228110604.png?api_key=" + config.space_server_appid;
-        std::string path2 = "/EPIC/archive/natural/2019/05/30/png/epic_1b_20190530011359.png?api_key=" + config.space_server_appid;
-        std::string filename1 = "output/epic_1b_20240228110604.png";
-        std::string filename2 = "output/epic_1b_20190530011359.png";
-
-        boost::asio::io_context io_context;
-
-        // Launching asynchronous HTTPS GET requests
-        CBoostIoTesterAsio asio;
-        boost::asio::spawn(io_context, [&](boost::asio::yield_context yield) {
-            asio.get_space_image(io_context, host, path1, filename1, yield);
-            });
-
-        boost::asio::spawn(io_context, [&](boost::asio::yield_context yield) {
-            asio.get_space_image(io_context, host, path2, filename2, yield);
-            });
-
-        // Running the io_context
-        io_context.run();
+        std::vector<std::string> filenames;
+        for (int arg = 2; arg < argc; arg++)
+        {
+            filenames.push_back({argv[arg]});
+        }
+        asio.get_space_images(&config, filenames);
     }
     break;
     // Add more cases for additional test programs
