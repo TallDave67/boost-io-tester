@@ -1,0 +1,44 @@
+@startuml
+
+class Application {
+    + main()
+}
+
+class IoContext {
+    + run()
+}
+
+class SslContext {
+    + SslContext()
+}
+
+class SslStream {
+    + handshake()
+}
+
+class Resolver {
+    + resolve()
+}
+
+class Socket {
+    + connect()
+    + handshake()
+    + async_write(request: boost::beast::http::request)
+    + async_read(response: boost::beast::http::response)
+}
+
+Application --> IoContext
+IoContext --> SslContext
+SslContext --> SslStream
+SslStream --> IoContext
+
+IoContext --> Resolver
+Resolver --> Socket
+Socket --> Resolver
+
+Application -> Socket: connect()
+Socket -> SslStream: handshake()
+Socket --> Application: async_write(request)
+Socket --> Application: async_read(response)
+
+@enduml

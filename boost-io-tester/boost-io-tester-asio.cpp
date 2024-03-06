@@ -35,7 +35,7 @@ void CBoostIoTesterAsio::get_space_images(CBoostIoTesterConfig* pConfig, const s
             // spawn thread to make request
             // note that we are capturing all variables by reference except the index as each thread needs the correct unique index
             boost::asio::spawn(io_context, [this, &io_context, &paths, &filepaths, index](boost::asio::yield_context yield) {
-                get_image_respone_for_secure_async_request(io_context, paths[index], filepaths[index], yield);
+                get_image_response_for_secure_async_request(io_context, paths[index], filepaths[index], yield);
             });
         }
 
@@ -88,7 +88,7 @@ void CBoostIoTesterAsio::get_text_response_for_sync_request(std::string& request
     }
 }
 
-void CBoostIoTesterAsio::get_image_respone_for_secure_async_request(boost::asio::io_context& io_context, const std::string& path, const std::string& filepath, boost::asio::yield_context yield)
+void CBoostIoTesterAsio::get_image_response_for_secure_async_request(boost::asio::io_context& io_context, const std::string& path, const std::string& filepath, boost::asio::yield_context yield)
 {
     try {
         // SSL context and socket creation

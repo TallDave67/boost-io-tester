@@ -1,0 +1,30 @@
+@startuml
+
+class Application {
+    + main()
+}
+
+class IoService {
+    + run()
+}
+
+class Resolver {
+    + resolve()
+}
+
+class Socket {
+    + connect()
+    + read_some()
+    + write()
+}
+
+Application --> IoService
+IoService --> Resolver
+IoService --> Socket
+Socket --> Resolver
+Socket --> IoService
+
+Application -> Socket: write(request)
+Socket --> Application: read_some(response)
+
+@enduml
